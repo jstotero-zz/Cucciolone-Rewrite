@@ -578,6 +578,8 @@ static int set_user(struct cred *new)
 
 	free_uid(new->user);
 	new->user = new_user;
+	sched_autogroup_create_attach(current);
+
 	return 0;
 }
 
