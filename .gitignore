@@ -9,6 +9,10 @@
 #
 # Normal rules
 #
+
+releases/
+*.zip
+
 .*
 *.o
 *.o.*
