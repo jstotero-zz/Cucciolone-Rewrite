@@ -227,6 +227,7 @@ static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_1200[] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
+/* JST THIS IS THE RIGHT ONE - FROM dmesg i get L val: PLL0: 50, PLL1: 12, PLL2: 41 */
 /* 7x27 normal with GSM capable modem - PLL0 and PLL1 swapped and pll2 @ 800 */
 static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
 	{ 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 30720 },
@@ -238,29 +239,57 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] = {
 	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 122880 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
 	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 122880 },
+	// Overclock Frequencies
+	{ 1, 806400, ACPU_PLL_2, 2, 0, 201600, 3, 7, 122880 }, //42
+	{ 1, 825600, ACPU_PLL_2, 2, 0, 206400, 3, 7, 122880 }, //43
+	{ 1, 844800, ACPU_PLL_2, 2, 0, 211200, 3, 7, 122880 }, //44
+	{ 1, 864000, ACPU_PLL_2, 2, 0, 216000, 3, 7, 122880 }, //45
+	{ 1, 883200, ACPU_PLL_2, 2, 0, 220800, 3, 7, 122880 }, //46
+	{ 1, 902400, ACPU_PLL_2, 2, 0, 225600, 3, 7, 122880 }, //47
+	{ 1, 921600, ACPU_PLL_2, 2, 0, 230400, 3, 7, 122880 }, //48
+    { 1, 940800, ACPU_PLL_2, 2, 0, 235200, 3, 7, 122880 }, //49
+    { 1, 960000, ACPU_PLL_2, 2, 0, 240000, 3, 7, 122880 }, //50
+    { 1, 979200, ACPU_PLL_2, 2, 0, 244800, 3, 7, 122880 }, //51
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
 /* 7x27 normal with CDMA-only modem - PLL0 and PLL1 swapped and pll2 @ 800 */
 static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_800[] = {
-	{ 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 24576 },
-	{ 1,  98304, ACPU_PLL_1, 1, 1,  98304, 0, 3,  49152 },
-	{ 0, 120000, ACPU_PLL_0, 4, 7,  60000, 1, 3,  49152 },
-	{ 1, 196608, ACPU_PLL_1, 1, 0,  65536, 2, 4,  98304 },
-	{ 0, 200000, ACPU_PLL_2, 2, 3,  66667, 2, 4,  98304 },
-	{ 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 120000 },
-	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 120000 },
-	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 120000 },
-	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 120000 },
+  /*{ a,      b,            c, d, e,     f, g, h,     i}*/
+	{ 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 30720 },
+	{ 0, 120000, ACPU_PLL_0, 4, 7,  60000, 1, 3,  61440 },
+	{ 1, 122880, ACPU_PLL_1, 1, 1,  61440, 1, 3,  61440 },
+	{ 0, 200000, ACPU_PLL_2, 2, 3,  66667, 2, 4,  61440 },
+	{ 1, 245760, ACPU_PLL_1, 1, 0, 122880, 1, 4,  61440 },
+	{ 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 122880 },
+	{ 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 122880 },
+	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
+	{ 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 122880 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
+/*
+	= jst notes =
+	We are considering the fact that the "800MHz" processor is actually set up at 787200. so we are moving keeping in account that difference. 
+	We are not introducing any ahb overclock, yet :)
+	LEGEND :
+	a -> enables (1) / disables (0) the accessibility of the frequency to scaling
+	b -> nominal frequency of the proc (it's only as a human reference, no utility in the code)
+	c -> PLL we are using
+	d -> divider corresponding to the pll we are using (PLL0 -> 4, PLL1 -> 1 , PLL2 -> 2)
+	e -> clock multiplier : real frequency is pll_clk / (e+1) .. as an example, if i'm using ( pll2 -> 800 MHz, e = 0 ) this means real_frequency = 800 / (e+1) = 800
+	f -> ahbclk : ahb frequency (only for human eyes)
+	g -> ahb multiplier : to obtain ahb frequency take real_frequency and divide it by (g+1) .. as an example, (real_frequency -> 800 MHz, g=3 ) means ahb_frequency = 800 / (g+1) = 200
+	h -> vdd voltage, from 3 to 7 : 3-6 correspond to 1.2V, level 7 corresponds to 1.325V. (interesting for undervolting?)
+	i -> this is axiclk_khz_freq which max is 200mhz on msm7x27 (i really don't know what this is)
+*/
 
-#define PLL_196_MHZ	10
+
+#define PLL_196_MHZ	10 /* jst PLL1 */
 #define PLL_245_MHZ	12
 #define PLL_491_MHZ	25
 #define PLL_768_MHZ	40
-#define PLL_800_MHZ	41
-#define PLL_960_MHZ	50
+#define PLL_800_MHZ	41 /* jst PLL2 */
+#define PLL_960_MHZ	50 /* jst PLL0 */
 #define PLL_1056_MHZ	55
 #define PLL_1200_MHZ	62
 
@@ -420,10 +449,12 @@ static int acpuclk_set_vdd_level(int vdd)
 	return 0;
 }
 
+// http://androidforums.com/1939452-post33.html here there is a GREAT explanation!! 
+
 /* Set proper dividers for the given clock speed. */
 static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 {
-	uint32_t reg_clkctl, reg_clksel, clk_div, src_sel;
+	uint32_t reg_clkctl, reg_clksel, clk_div, src_sel, a11_div;
 
 	reg_clksel = readl(A11S_CLK_SEL_ADDR);
 
@@ -431,6 +462,25 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	clk_div = (reg_clksel >> 1) & 0x03;
 	/* CLK_SEL_SRC1NO */
 	src_sel = reg_clksel & 1;
+
+	//OVERCLOCK perform overclock if requested
+	// revert to a11_div overclock 
+	a11_div = hunt_s->a11clk_src_div;
+	/* jst : To understand, suppose i forced a clock of 921600  */
+	if(hunt_s->a11clk_khz>800000) {
+					a11_div = 0;
+					/* Change the speed of PLL2*/
+					writel(hunt_s->a11clk_khz/19200, PLLn_L_VAL(2)); /* jst : I get 921600/19200 = 48 and write it into PLL2 (it has maximum 41 corresponding to 800 Mhz)*/
+					cpu_relax(); /* as seen on franco*/
+					udelay(50);
+			}
+
+	// JST Pump the PLL2 up another 19200kHz on 800000 (overclock stock 800MHz from 787.2MHz to 804.8MHz) --> franco!
+	if(hunt_s->pll==0 && hunt_s->a11clk_khz==800000) {
+		writel(51, PLLn_L_VAL(0));
+		cpu_relax(); // magic /more magic
+		udelay(50);
+	}
 
 	/*
 	 * If the new clock divider is higher than the previous, then
@@ -446,12 +496,20 @@ static void acpuclk_set_div(const struct clkctl_acpu_speed *hunt_s)
 	reg_clkctl = readl(A11S_CLK_CNTL_ADDR);
 	reg_clkctl &= ~(0xFF << (8 * src_sel));
 	reg_clkctl |= hunt_s->a11clk_src_sel << (4 + 8 * src_sel);
-	reg_clkctl |= hunt_s->a11clk_src_div << (0 + 8 * src_sel);
+	reg_clkctl |= a11_div << (0 + 8 * src_sel);
 	writel(reg_clkctl, A11S_CLK_CNTL_ADDR);
 
 	/* Program clock source selection */
 	reg_clksel ^= 1;
 	writel(reg_clksel, A11S_CLK_SEL_ADDR);
+
+	// Recover from overclocking
+	if(hunt_s->pll == ACPU_PLL_2 && hunt_s->a11clk_khz<=800000) {
+		// Restore the speed of PLL2
+		writel(PLL_800_MHZ, PLLn_L_VAL(2)); // jst : I reset 41 to PLL2, its natural value
+		cpu_relax(); // magic / more magic
+		udelay(50);
+	}
 
 	/*
 	 * If the new clock divider is lower than the previous, then
