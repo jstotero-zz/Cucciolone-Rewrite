@@ -9,7 +9,7 @@
 #
 # Normal rules
 #
-
+zImage
 releases/
 *.zip
 
