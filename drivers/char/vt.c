@@ -353,24 +353,24 @@ void display_errorinfo_byLGE(int crash_side, unsigned short * buf, int count)
 	vc = vc_cons[0].d;
 
 	if(crash_side == 0) {
-		fbcon_putcs_byLGE (vc,(unsigned short *)ARM9_CRASH_STRING,LGE_ERROR_MAX_COLUMN,0,0);
+		// fbcon_putcs_byLGE (vc,(unsigned short *)ARM9_CRASH_STRING,LGE_ERROR_MAX_COLUMN,0,0);
 	} else if (crash_side == 1) { 
-		fbcon_putcs_byLGE (vc,(unsigned short *)ARM11_CRASH_STRING,LGE_ERROR_MAX_COLUMN,0,0);
+		// fbcon_putcs_byLGE (vc,(unsigned short *)ARM11_CRASH_STRING,LGE_ERROR_MAX_COLUMN,0,0);
 	} else if (crash_side == 2 || crash_side == 3) {
-		fbcon_putcs_byLGE (vc,(unsigned short *)ANDROID_CRASH_STRING,LGE_ERROR_MAX_COLUMN,0,0);
+		// fbcon_putcs_byLGE (vc,(unsigned short *)ANDROID_CRASH_STRING,LGE_ERROR_MAX_COLUMN,0,0);
 	}
-	fbcon_putcs_byLGE(vc,(unsigned short *)RAMDUMP_STRING, LGE_ERROR_MAX_COLUMN,1,0);
-	fbcon_putcs_byLGE(vc,(unsigned short *)RESET_STRING,LGE_ERROR_MAX_COLUMN,2,0);
+	// fbcon_putcs_byLGE(vc,(unsigned short *)RAMDUMP_STRING, LGE_ERROR_MAX_COLUMN,1,0);
+	// fbcon_putcs_byLGE(vc,(unsigned short *)RESET_STRING,LGE_ERROR_MAX_COLUMN,2,0);
 
 	temp+=LGE_ERROR_MAX_COLUMN;
 
 	
 	for (i=0; i< LGE_ERROR_MAX_ROW-1; i++) {
-			fbcon_putcs_byLGE(vc, temp, LGE_ERROR_MAX_COLUMN , i+3,0);
+			// fbcon_putcs_byLGE(vc, temp, LGE_ERROR_MAX_COLUMN , i+3,0);
 			temp += LGE_ERROR_MAX_COLUMN;
 		}
 
-	fbcon_update_byLGE(vc);
+	// fbcon_update_byLGE(vc);
 	msm_fb_refesh_enabled = 0;	// Block another Refresh
 
 }
