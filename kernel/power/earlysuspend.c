@@ -17,7 +17,6 @@
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/rtc.h>
-#include <linux/syscalls.h> /* sys_sync */
 #include <linux/wakelock.h>
 #include <linux/workqueue.h>
 #include <linux/kallsyms.h>
@@ -214,3 +213,4 @@ suspend_state_t get_suspend_state(void)
 {
 	return requested_suspend_state;
 }
+
