@@ -446,7 +446,7 @@ static enum hrtimer_restart synaptics_ts_timer_func(struct hrtimer *timer)
 	struct synaptics_ts_data *ts = container_of(timer, struct synaptics_ts_data, timer);
 
 	queue_work(synaptics_wq, &ts->work);
-	hrtimer_start(&ts->timer, ktime_set(0, 12500000), HRTIMER_MODE_REL); /* 12.5 msec */
+	hrtimer_start(&ts->timer, ktime_set(0, 1250000), HRTIMER_MODE_REL); /* 12.5 msec */
 
     return HRTIMER_NORESTART;
 }
